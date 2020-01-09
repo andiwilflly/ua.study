@@ -1,48 +1,64 @@
 import React from 'react';
 import {
 	View,
-	Text,
-	StatusBar,
 	StyleSheet
 } from 'react-native';
+import { Spinner } from 'native-base';
+import firebase from 'firebase';
+// MobX
+import { observer } from "mobx-react";
+// Store
+import store from "./app/store";
+// Components
+import LogInScreen from "./app/components/screens/LogInScreen.component";
 import AppNavigator from './app/components/navigation/AppNavigator';
 
-console.log(23423, 42);
 
-// import firebase from '@react-native-firebase/app';
-// import firestore from '@react-native-firebase/firestore';
-//
-// const firebaseConfig = {
-// 	apiKey: "AIzaSyC4vw1ZWNpsjH-ZOdK1VGHX2SnyTEe8Pqg",
-// 	authDomain: "ua-study.firebaseapp.com",
-// 	databaseURL: "https://ua-study.firebaseio.com",
-// 	projectId: "ua-study",
-// 	storageBucket: "ua-study.appspot.com",
-// 	messagingSenderId: "1000269219215",
-// 	appId: "1:1000269219215:web:8552a0d4fc16235fd337fa",
-// 	measurementId: "G-3TKSMDNZ3X"
-// };
-// // Initialize Firebase
-// if (!firebase.apps.length) {
-// 	firebase.initializeApp(firebaseConfig);
-// }
+const firebaseConfig = {
+	apiKey: "AIzaSyC4vw1ZWNpsjH-ZOdK1VGHX2SnyTEe8Pqg",
+	authDomain: "ua-study.firebaseapp.com",
+	databaseURL: "https://ua-study.firebaseio.com",
+	projectId: "ua-study",
+	storageBucket: "ua-study.appspot.com",
+	messagingSenderId: "1000269219215",
+	appId: "1:1000269219215:web:8552a0d4fc16235fd337fa",
+	measurementId: "G-3TKSMDNZ3X"
+};
+
+// Initialize Firebase
+
+firebase.initializeApp(firebaseConfig);
+firebase.auth().onAuthStateChanged(function(firebaseUser) {
+	if (firebaseUser) {
+		store.user.logIn({
+			email: firebaseUser.email,
+			uid: firebaseUser.uid
+		});
+		store.update({ isAppReady: true });
+		console.log('login', store, store.user.uid, firebaseUser.email, firebaseUser.uid);
+	} else {
+		console.log('logout');
+	}
+});
+
 
 // adb shell input keyevent 82
-// console.log(firebase, 42);
+// adb devices
+class App extends React.Component {
 
-export default function App(props) {
-	return (
-		<View style={styles.container}>
-			{Platform.OS === 'ios' && <StatusBar barStyle="default"/>}
-			<AppNavigator/>
-		</View>
-	);
+
+
+	render() {
+
+		console.log(store);
+		if(store.isAppReady === false) return <Spinner />;
+		if(store.user.uid === 'anon') return <LogInScreen />;
+		return <AppNavigator/>;
+	}
 }
 
 
-const styles = StyleSheet.create({
-	container: {
-		flex: 1,
-		backgroundColor: '#fff',
-	},
-});
+export default observer(App);
+
+
+

@@ -15,7 +15,7 @@ export default function HomeScreen() {
 				<Right />
 			</Header>
 			<Content>
-					<Spinner />
+				<Spinner />
 			</Content>
 		</Container>
 	);
