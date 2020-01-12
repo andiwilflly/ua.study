@@ -37,7 +37,7 @@ class LogInScreen extends Component {
 				<Content>
 					<Form>
 						<Item stackedLabel>
-							<Label>Email ({ store.user.uid })</Label>
+							<Label>Email</Label>
 							<Input value={ this.form.email }
 								   onChangeText={ (text)=> this.form.email = text } />
 						</Item>
