@@ -1,8 +1,5 @@
 import React from 'react';
-import {
-	View,
-	StyleSheet
-} from 'react-native';
+import { AppState } from 'react-native';
 import { Spinner } from 'native-base';
 import firebase from 'firebase';
 // MobX
@@ -30,7 +27,7 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 firebase.auth().onAuthStateChanged(function(firebaseUser) {
 	if (firebaseUser) {
-		store.user.logIn({
+		store.logIn({
 			email: firebaseUser.email,
 			uid: firebaseUser.uid
 		});
@@ -46,13 +43,31 @@ firebase.auth().onAuthStateChanged(function(firebaseUser) {
 // adb devices
 class App extends React.Component {
 
+	constructor(props) {
+		super(props);
+		store.loadFromAsyncStorage();
+	}
+
+
+	componentDidMount() {
+		AppState.addEventListener('change', this._handleAppStateChange);
+	}
+
+
+	componentWillUnmount() {
+		AppState.removeEventListener('change', this._handleAppStateChange);
+	}
+
+
+	_handleAppStateChange = (nextAppState) => {
+		if(nextAppState !== 'active') store.saveToAsyncStorage();
+	};
 
 
 	render() {
-
 		console.log(store);
 		if(store.isAppReady === false) return <Spinner />;
-		if(store.user.uid === 'anon') return <LogInScreen />;
+		if(!store.user) return <LogInScreen />;
 		return <AppNavigator/>;
 	}
 }

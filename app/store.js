@@ -5,10 +5,7 @@ import RootModel from "./models/Root.model";
 
 const store = RootModel.create({
 	isAppReady: false,
-	user: {
-		uid: 'anon',
-		email: 'anon'
-	}
+	user: null
 });
 
 export default store;

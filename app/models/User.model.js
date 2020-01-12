@@ -11,19 +11,6 @@ const UserModel = {
 const actions = (self)=> {
 
 	return {
-
-		logIn(user) {
-			self.uid = user.uid;
-			self.email = user.email;
-		},
-
-
-		logOut() {
-			self.user = {
-				uid: 'anon',
-				email: 'anon'
-			};
-		},
 	}
 };
 

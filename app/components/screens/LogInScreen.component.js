@@ -22,7 +22,7 @@ class LogInScreen extends Component {
 		console.log('submit');
 		firebase.auth().signInWithEmailAndPassword(this.form.email, this.form.password)
 			.then((firebaseUser)=> {
-				store.user.logIn(firebaseUser);
+				store.logIn(firebaseUser);
 				console.log('LOGGEN IN', firebaseUser);
 			}).catch((e)=> {
 				console.log('auth ERROR!');
